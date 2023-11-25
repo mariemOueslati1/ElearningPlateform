@@ -1,0 +1,59 @@
+<!-- registration/register.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+</head>
+<body>
+
+<h2>User Registration</h2>
+
+<form method="post" action="{% url 'register' %}">
+    {% csrf_token %}
+
+    {{ form.username.label_tag }}
+    {{ form.username }}
+    {% if form.errors.username %}
+        <div class="error-message">
+            {{ form.errors.username }}
+        </div>
+    {% endif %}
+
+    {{ form.email.label_tag }}
+    {{ form.email }}
+    {% if form.errors.email %}
+        <div class="error-message">
+            {{ form.errors.email }}
+        </div>
+    {% endif %}
+
+    {{ form.password1.label_tag }}
+    {{ form.password1 }}
+    {% if form.errors.password1 %}
+        <div class="error-message">
+            {{ form.errors.password1 }}
+        </div>
+    {% endif %}
+
+    {{ form.password2.label_tag }}
+    {{ form.password2 }}
+    {% if form.errors.password2 %}
+        <div class="error-message">
+            {{ form.errors.password2 }}
+        </div>
+    {% endif %}
+
+    {{ form.roleList.label_tag }}
+    {{ form.roleList }}
+    {% if form.errors.roleList %}
+        <div class="error-message">
+            {{ form.errors.password2 }}
+        </div>
+    {% endif %}
+
+    <button type="submit">Register</button>
+</form>
+
+</body>
+</html>

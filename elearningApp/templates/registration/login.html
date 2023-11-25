@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <h2>Login</h2>
+  <a href="{% url 'logout' %}">Logout</a>
+  {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+  <form method="post" action="{% url 'login' %}" id="loginForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" onclick="submitForm()">Login</button>
+  </form>
+  <script>
+    function submitForm() {
+      const form = document.getElementsByTagName('form')[0];
+      console.log('form ', form);
+      const formData = new FormData(form);
+
+      fetch("{% url 'login' %}", {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Assuming your server responds with a token field in the JSON data
+        const receivedToken = data.token;
+        console.log(receivedToken);
+
+        // Store the token securely (you might want to encrypt it)
+        localStorage.setItem('authToken', receivedToken);
+
+        // Redirect or perform other actions as needed
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+  {% if user.is_authenticated %}
+    <p>User Permissions:</p>
+    <ul>
+        {% for permission in user.get_all_permissions %}
+            <li>{{ permission }}</li>
+        {% endfor %}
+    </ul>
+    
+{% else %}
+    <p>User is not authenticated.</p>
+{% endif %}
+
+  
+{% endblock %}

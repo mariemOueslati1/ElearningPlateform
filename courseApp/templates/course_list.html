@@ -1,0 +1,92 @@
+<!-- course_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Course List</h1>
+    <ul>
+        {% for course in courses %}
+            <li>
+                <strong>{{ course.title }}</strong> by {{ course.tutor}}<br>
+                <p>{{ course.description }}</p>
+                Enrollment Capacity: {{ course.enrollment_capacity }}
+                <br>
+                <a href="#" class="delete-course" data-course-id="{{ course.pk }}" data-toggle="modal" data-target="#confirmationModal">Delete</a>
+            </li>
+        {% endfor %}
+
+       
+    {% if user.is_authenticated %}
+    <p>{{user}}</p>
+    <p>{{user.username}}</p>
+    <p>User Permissions:</p>
+    <ul>
+        {% for permission in user.get_all_permissions %}
+            <li>{{ permission }}</li>    
+        {% endfor %}
+        <p>{{permissionsUser}} </p>
+        {% if permissionsUser %}
+        <!-- Your code here -->
+        <button>Add Course</button>
+    {% endif %}
+    </ul>
+    
+{% else %}
+    <p>User is not authenticated.</p>
+{% endif %}
+
+
+
+</body>
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the course?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDelete" class="btn btn-danger">Yes, delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Bootstrap JS and jQuery scripts here -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+    $('.delete-course').on('click', function() {
+        var courseId = $(this).data('course-id');
+        var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/courses/courses/' + courseId + '/delete/',
+            headers: {'X-CSRFToken': csrfToken},
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    });
+});
+
+</script>
+</html>
