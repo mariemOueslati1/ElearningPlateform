@@ -102,7 +102,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Elearning_db',
         'USER': 'postgres',
-        'PASSWORD': 'mariem',
+        'PASSWORD': '',
         'HOST': 'localhost',  # Set to the address of your PostgreSQL server
         'PORT': '5432',      # Set to the port of your PostgreSQL server
     }
@@ -158,6 +158,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = 'mariemoueslati165@gmail.com'
-EMAIL_HOST_PASSWORD = 'hatemeagain'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
