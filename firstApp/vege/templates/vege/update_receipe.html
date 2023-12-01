@@ -1,0 +1,20 @@
+{% extends "base.html"%}
+{% block start  %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+    <label for="receipe_name">receipe name:</label><br>
+    <input type="text" name="receipe_name"   value="{{receipe.receipe_name}}"><br>
+
+
+    <label for="receipe_description">recipe desciption</label><br>
+    <textarea name="receipe_description" id="" cols="30" rows="10"  >{{receipe.receipe_description}}</textarea>
+
+    <label for="receipe_image">receipe image</label><br>
+    <input type="file" name="receipe_image"  ><br>
+
+    <button type="submit">Submit</button>
+    
+  </form> 
+
+    
+{% endblock %}
