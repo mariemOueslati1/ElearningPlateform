@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .permissions import enroll_permission , IsEnrollmentOwner
 from django.core.exceptions import PermissionDenied
 from courseApp.models import Course
+from django.http import JsonResponse
 import logging
 
 logger = logging.getLogger(__name__)
@@ -51,16 +52,13 @@ class EnrollmentCreateView(generics.CreateAPIView):
             course_id = self.kwargs.get('course_id')
             course = self.get_course(course_id)
             serializer.save(student=self.request.user, course=course)
+            return JsonResponse({'message': 'Enrollment successful'})
         except PermissionDenied:
             raise serializers.ValidationError('You do not have permission to enroll in this course.')
         except Exception as e:
             raise serializers.ValidationError(str(e))
 
-    def get_serializer_context(self):
-        """
-        Extra context provided to the serializer class.
-        """
-        return {'request': self.request}
+
 
 
 class EnrollmentDetailView(generics.RetrieveDestroyAPIView):
@@ -100,3 +98,23 @@ class EnrollmentUpdateView(generics.RetrieveUpdateAPIView):
             return Response({'error': 'Enrollment not found.'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+class ListEnrollmentsByCourseView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = EnrollmentSerializer
+
+    def get_queryset(self):
+        course_id = self.kwargs.get('course_id')
+        return Enrollment.objects.filter(course_id=course_id)
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            # Get the list of courses
+            enrollment = self.list(request, *args, **kwargs).data
+            # Render the template with the list of courses and user information
+            return render(request, 'enrollment.html', {'enrollment': enrollment, 'user': request.user})
+        else:
+            # Handle unauthenticated users as needed
+            return Response({'error': 'Authentication required.'}, status=status.HTTP_401_UNAUTHORIZED)

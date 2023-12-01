@@ -1,38 +1,22 @@
 <!-- course_list.html -->
 {% extends 'base.html' %}
-{% load permissions_tags %}
-
-{% block title %}Courses{% endblock %}
+{% block title %}Enrollment{% endblock %}
 
 {% block content %}
+    <h1>Enrollment List</h1>
+    {% if enrollment %}
+        <ul>
+            {% for enroll in enrollment %}
+                <li>{{ enroll.student_id }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No enrollments available.</p>
+    {% endif %}
 
-
-    <h1>Course List</h1>
-    <ul>
-        {% for course in courses %}
-            <li>
-                <strong>{{ course.title }}</strong> by {{ course.tutor}}<br>
-                <p>{{ course.description }}</p>
-                Enrollment Capacity: {{ course.enrollment_capacity }}
-                <br>
-                <a href="#" class="delete-course" data-course-id="{{ course.pk }}" data-toggle="modal" data-target="#confirmationModal">Delete</a>
-                <p>{{course.id}}</p>
-                <a href="{% url 'enrollments_for_course' course_id=course.id %}">View Enrollments</a>
-                {% if request.user|has_permission:'courseApp.can_enroll' %}
-                <form id="enrollForm" action="{% url 'enrollment_create' course_id=course.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Enroll</button>
-                </form>
-                
-            {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-
-
-
-
+   
 {% endblock %}
+
 <!-- Confirmation Modal -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -80,29 +64,4 @@
 });
 
 </script>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("form#enrollForm").submit(function (event) {
-            event.preventDefault();
-            var form = $(this);
-
-            $.ajax({
-                type: form.attr('method'),
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function (data) {
-                    // Display a dialog or alert
-                    alert(data.message);
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    // Handle errors if needed
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-    });
-</script>
-
 </html>

@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'SubmissionApp',
     'GradeApp',
     'interactionApp',
-    'readingStateApp'
+    'readingStateApp',
+    'TutorDashboard'
     
 
 ]
@@ -63,10 +64,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        # ... other authentication classes if needed
-    ],
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -102,7 +106,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Elearning_db',
         'USER': 'postgres',
-        'PASSWORD': '',
+        'PASSWORD': 'mariem',
         'HOST': 'localhost',  # Set to the address of your PostgreSQL server
         'PORT': '5432',      # Set to the port of your PostgreSQL server
     }
@@ -151,13 +155,5 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
 
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
 

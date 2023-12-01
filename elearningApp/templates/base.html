@@ -5,6 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <title>{% block title %}My Website{% endblock %}</title>
     <!-- Add your CSS links or other head elements here -->
 </head>
@@ -12,7 +16,32 @@
     <div id="content">
         {% block content %}{% endblock %}
     </div>
+    {% if user.is_authenticated %}
+        <!-- Display logout button when user is logged in -->
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% endif %}
     <p>Base</p>
+    {% if user.is_authenticated %}
+    <p>{{user}}</p>
+    <p>{{user.username}}</p>
+    <p>User Permissions:</p>
+    <ul>
+        {% for permission in user.get_all_permissions %}
+            <li>{{ permission }}</li>    
+        {% endfor %}
+        <p>{{permissionsUser}} </p>
+        {% if permissionsUser %}
+        <!-- Your code here -->
+        <button>Add Course</button>
+        {% endif %}
+    </ul>
+    
+{% else %}
+    <p>User is not authenticated.</p>
+{% endif %}
     
     <!-- Add your footer or other common elements here -->
 </body>

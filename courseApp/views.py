@@ -48,59 +48,7 @@ class AddCourseView(generics.CreateAPIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    def perform_create(self, serializer):
-        # Set the tutor field to the ID of the authenticated user
-        serializer.save(tutor=self.request.user)
     
-        # Notify all students about the new course
-        self.notify_students(Course)
-
-    def notify_students(self, course):
-    # Fetch all users with roleList == 'Student'
-        students = UserProfile.objects.filter(roleList='Student')
-        print("Student : ", students)
-        # Send email to each student
-        for student in students:
-            self.send_notification_email(student.email, course)
-    @staticmethod
-    def test_email_connection():
-        try:
-            # Establish a connection to the SMTP server
-            server = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
-
-            # Start TLS (Transport Layer Security) if configured
-            if settings.EMAIL_USE_TLS:
-                server.starttls()
-
-            # Login to the SMTP server with your Gmail credentials
-            server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-
-            # Close the connection
-            server.quit()
-
-            print("Connection to Gmail SMTP server established successfully.")
-        except Exception as e:
-            print(f"Failed to establish connection to Gmail SMTP server. Error: {str(e)}")
-
-
-    def send_notification_email(self, recipient_email, course):
-        # Call the function to test the connection
-        self.test_email_connection()
-        """
-        subject = 'New Course Added'
-        message = f"Dear student,\n\nA new course '{course.title}' has been added. Check it out on our platform!"
-        from_email = settings.EMAIL_HOST_USER
-        try:
-            # Attempt to send the email
-            send_mail(subject, message, from_email, [recipient_email])
-            print(f"Email sent successfully to {recipient_email}")
-            return Response({'detail': 'Email sent successfully.'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            # Handle the exception (e.g., log the error)
-            print(f"Failed to send email to {recipient_email}. Error: {str(e)}")
-            return Response({'error': 'Failed to send email.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        """
-        
 
 class DeleteCourseView(generics.DestroyAPIView):
     queryset = Course.objects.all()
@@ -146,18 +94,33 @@ class UpdateCourseView(generics.UpdateAPIView):
 
 
 class ListCoursesView(generics.ListAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer 
     permission_classes = [IsAuthenticated]  
+    serializer_class = CourseSerializer 
+
+    def get_queryset(self):
+        queryset = Course.objects.all()
+        return queryset
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             # Get the list of courses
             courses = self.list(request, *args, **kwargs).data
-            print("courses : ", courses)
             # Render the template with the list of courses and user information
             return render(request, 'course_list.html', {'courses': courses, 'user': request.user})
         else:
             # Handle unauthenticated users as needed
             return Response({'error': 'Authentication required.'}, status=status.HTTP_401_UNAUTHORIZED)
 
+class TutorListCoursesView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CourseSerializer
 
+    def get_queryset(self):
+        user_id = self.request.user.id
+        print("user_id = ", user_id)
+        return Course.objects.filter(tutor_id=user_id)
+
+    def get(self, request, *args, **kwargs):
+        courses = self.list(request, *args, **kwargs).data
+            # Render the template with the list of courses and user information
+        return render(request, 'course_list.html', {'courses': courses, 'user': request.user})

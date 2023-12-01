@@ -28,4 +28,5 @@ urlpatterns = [
     path('Grade/', include('GradeApp.urls')),
     path('Interaction/', include('interactionApp.urls')),
     path('Readings/', include('readingStateApp.urls')),
+    path('soap_service/', include('TutorDashboard.urls')),
 ]
