@@ -1,0 +1,97 @@
+<!-- submissions.html -->
+{% extends 'base.html' %}
+{% load permissions_tags %}
+{% block title %}Assignment{% endblock %}
+
+{% block content %}
+    <h1>Assignment</h1>
+    <h1>Assignment for Course ID: {{ course_id }}</h1>
+    {% if assignemnts %}
+        <ul>
+            {% for assignemnt in assignemnts %}
+                <li>
+                    <p>{{assignemnt.id}}</p>
+                    <p>Title: {{ assignemnt.title }}</p>
+                    <p>description: {{ assignemnt.description }}</p>
+                    {% if request.user|has_permission:'courseApp.submit_assignment' %}
+                    <button type="button" id="open-add-submission-dialog" data-assignment-id="{{ assignemnt.id }}">Submit</button>
+                {% endif %}
+                <a href="{% url 'submission-list' assignment_id=assignemnt.id %}">View Submissions</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No assignment available.</p>
+    {% endif %}
+
+    <div id="add-submission-dialog" style="display: none;">
+        <form id="add-submission-form">
+            {% csrf_token %}
+  
+            <label for="submissionContent">Submission Content:</label>
+            <textarea id="submissionContent" name="submissionContent" rows="4" required></textarea>
+            <button type="submit">Add Your Submission</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Open Add Course Dialog
+            var openAddSubmissionDialog = document.getElementById("open-add-submission-dialog");
+            if (openAddSubmissionDialog) {
+                openAddSubmissionDialog.addEventListener("click", function () {
+                    var addSubmissionDialog = document.getElementById("add-submission-dialog");
+                    if (addSubmissionDialog) {
+                        addSubmissionDialog.style.display = "block";
+                    }
+                });
+            }
+            // Submit Form
+            var addSubmissionForm = document.getElementById("add-submission-form");
+            if (addSubmissionForm) {
+                addSubmissionForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+
+                    
+                    var Submission = document.getElementById("submissionContent").value;
+                    
+                    
+
+                    
+                    var assignemntId = openAddSubmissionDialog.getAttribute("data-assignment-id");
+
+                    // Log the values directly before sending the AJAX request
+
+                    // Make AJAX request to AddsubmissionView
+                    fetch("{% url 'add-submission' assignment_id=0 %}".replace('0', assignemntId), {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": document.getElementsByName("csrfmiddlewaretoken")[0].value,
+                        },
+                        body: JSON.stringify({
+                            submission_content : Submission
+                        }),
+                    })
+                    .then(response => {
+                    if (response.ok) {
+                        alert("submission added successfully.");
+                        // Optionally, you can redirect to another page or update the UI.
+                        addSubmissionDialog.style.display = "none";
+                    } else if (response.status === 403) {
+                        // Permission denied
+                        alert("You do not have permission to create a submission for this course");
+                    } else {
+                        return response.json().then(data => {
+                            console.log("Error adding submission: " + data.error);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.log("Error adding submission: " + error.message);
+                });
+            });
+        }
+    });
+    </script>
+{% endblock %}

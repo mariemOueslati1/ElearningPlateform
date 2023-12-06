@@ -52,7 +52,10 @@ class ListAssignmentView(generics.ListAPIView):
 
         # Serialize the queryset and return the response
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Get the course ID from the URL parameters
+        course_id = self.kwargs.get('course_id')
+
+        return render(request, 'assignment.html', {'assignemnts': serializer.data, 'user': request.user, 'course_id': course_id})
 
 class UpdateAssignmentView(generics.UpdateAPIView):
     queryset = Assignment.objects.all()

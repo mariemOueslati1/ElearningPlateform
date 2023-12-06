@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load permissions_tags %}
+{% block content %}
+  <h2>Update Course</h2>
+  {% if request.user|has_permission:'courseApp.create_manage_courses' %}
+    <form method="post" id="update-course-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="button" onclick="updateCourse()">Update Course</button>
+    </form>
+
+    <script>
+      function updateCourse() {
+        var form = document.getElementById('update-course-form');
+        var formData = new FormData(form);
+
+        // Create a JSON object from form data
+        var jsonData = {};
+        formData.forEach((value, key) => {
+          jsonData[key] = value;
+        });
+
+        // Make a PUT request to the API
+        fetch("{% url 'course-update' pk=course.id %}", {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+          body: JSON.stringify(jsonData),
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json(); // Parse the JSON response
+          } else {
+            throw new Error('Course update failed');
+          }
+        })
+        .then(data => {
+          console.log(data.detail); // Handle the successful response
+          alert(data.detail);
+          // Redirect to the course_list.html page
+          window.location.href = "{% url 'list_courses' %}";
+        })
+        .catch(error => {
+          console.error(error);
+          alert('Course update failed');
+        });
+      }
+    </script>
+
+  {% else %}
+    <p>You do not have permission to update this course.</p>
+  {% endif %}
+{% endblock %}

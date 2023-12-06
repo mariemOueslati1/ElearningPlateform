@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'crispy_forms',
     'elearningApp',
     'courseApp',
     'EnrollementApp',
@@ -48,11 +49,13 @@ INSTALLED_APPS = [
     'GradeApp',
     'interactionApp',
     'readingStateApp',
-    'TutorDashboard'
+    'TutorDashboard',
+    'studentDashboard',
     
 
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'  # Use 'bootstrap4' or another available template pack
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

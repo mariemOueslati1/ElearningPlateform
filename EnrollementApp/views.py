@@ -113,6 +113,7 @@ class ListEnrollmentsByCourseView(generics.ListAPIView):
         if request.user.is_authenticated:
             # Get the list of courses
             enrollment = self.list(request, *args, **kwargs).data
+            print("enrollment : ", enrollment)
             # Render the template with the list of courses and user information
             return render(request, 'enrollment.html', {'enrollment': enrollment, 'user': request.user})
         else:

@@ -1,0 +1,165 @@
+
+{% extends 'base.html' %}
+{% load permissions_tags %}
+
+{% block title %}Tutor Dashboard{% endblock %}
+
+{% block content %}
+
+    
+
+
+<h1>Tutor Dashboard</h1>
+<ul>
+    {% for course in courses %}
+        <li>
+            <p> course id : {{course.id}}</p>
+            <strong>{{ course.title }}</strong> by {{ course.tutor}}<br>
+            <p>{{ course.description }}</p>
+            Enrollment Capacity: {{ course.enrollment_capacity }}
+            <a href="{% url 'enrollments_for_course' course_id=course.id %}">View Enrollments</a>
+
+            {% if request.user|has_permission:'courseApp.create_manage_courses' %}
+                <a href="{% url 'course-update' pk=course.id %}">Update</a>
+                <button type="button" class="delete-course-btn" data-course-id="{{ course.id }}">Delete Course</button>
+                <a href="{% url 'get_enrolled_student_count' course.id %}">Analytics</a>
+
+            {% endif %}
+            <a href="{% url 'course-detail'  pk=course.id %}">Course Details</a>
+        </li>
+    {% endfor %}
+   
+</ul>
+{% if request.user|has_permission:'courseApp.create_manage_courses' %}
+<button type="button" id="open-add-course-dialog">Add Course</button>
+
+{% endif %}
+<!-- Add Course Dialog -->
+<div id="add-course-dialog" style="display: none;">
+<form id="add-course-form">
+  {% csrf_token %}
+
+  <label for="title">Title:</label>
+  <input type="text" id="title" name="title" required>
+
+  <label for="description">Description:</label>
+  <textarea id="description" name="description" required></textarea>
+
+  <label for="enrollment_capacity">Enrollment Capacity:</label>
+  <input type="number" id="enrollment_capacity" name="enrollment_capacity" required>
+
+  <!-- You can set the tutor field value dynamically in the JavaScript code -->
+
+  <button type="submit">Add Course</button>
+</form>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var deleteButtons = document.getElementsByClassName("delete-course-btn");
+
+    Array.from(deleteButtons).forEach(function (button) {
+        button.addEventListener("click", function () {
+            var courseId = button.getAttribute("data-course-id");
+
+            if (confirm("Are you sure you want to delete this course?")) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("DELETE", "/courses/courses/" + courseId + "/", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                      if (xhr.status === 204) {
+                        alert("Course deleted successfully.");
+                        // Optionally, you can redirect to another page or update the UI.
+                    } else if (xhr.status === 403) {
+                        var errorResponse = JSON.parse(xhr.responseText);
+                        alert("Error deleting course: " + errorResponse.error);
+                    } else {
+                        alert("Error deleting course: " + xhr.responseText);
+                    }
+                    }
+                };
+
+                xhr.send();
+            }
+        });
+    });
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+// Open Add Course Dialog
+document.getElementById("open-add-course-dialog").addEventListener("click", function () {
+    document.getElementById("add-course-dialog").style.display = "block";
+});
+
+// Submit Form
+document.getElementById("add-course-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    var title = document.getElementById("title").value;
+    var description = document.getElementById("description").value;
+    var enrollmentCapacity = document.getElementById("enrollment_capacity").value;
+
+    
+
+    // Make AJAX request to AddCourseView
+    fetch("{% url 'add_course' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.getElementsByName("csrfmiddlewaretoken")[0].value,
+        },
+        body: JSON.stringify({
+            title: title,
+            description: description,
+            enrollment_capacity: enrollmentCapacity,
+        }),
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Course added successfully.");
+            // Optionally, you can redirect to another page or update the UI.
+            document.getElementById("add-course-dialog").style.display = "none";
+        } else {
+            return response.json().then(data => {
+                console.log("Error adding course: " + data.error);
+            });
+        }
+    })
+    .catch(error => {
+        console.log("Error adding course: " + error.message);
+    });
+});
+});
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Make AJAX call to your Django view
+        $.ajax({
+            url: '/get_enrolled_student_count/1/',  // Update with your URL
+            method: 'GET',
+            success: function (data) {
+                // Handle success, update the UI, etc.
+                console.log(data);
+            },
+            error: function (error) {
+                // Handle errors
+                console.error(error);
+            }
+        });
+    });
+</script>
+
+    
+{% endblock %}
+
+
+
+

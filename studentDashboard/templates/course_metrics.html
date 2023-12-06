@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+{% load permissions_tags %}
+
+{% block title %}Student Anlytics{% endblock %}
+
+{% block content %}
+
+    
+
+
+<h1>Student Analytics</h1>
+
+{% if course_metrics %}
+<p>Number of Assignments Submitted: {{ course_metrics.assignment_count }}</p>
+<p>Read State: {{ course_metrics.read_state }}%</p>
+{% else %}
+<p>Error retrieving course metrics.</p>
+{% endif %}
+{% endblock %}
+
+
+
+

@@ -1,0 +1,29 @@
+<!-- submissions.html -->
+{% extends 'base.html' %}
+{% load permissions_tags %}
+{% block title %}Submissions{% endblock %}
+
+{% block content %}
+    <h1>Submission</h1>
+    <h1>Submission for assignemnt ID: {{ assignment_id }}</h1>
+    {% if submissions %}
+        <ul>
+            {% for submission in submissions %}
+                <li>
+                    <p>{{submission.id}}</p>
+                    <p>Title: {{ submission.submission_content }}</p>
+                    <p>date: {{ submission.submission_date }}</p>
+                    <p>student id: {{ submission.student }}</p>
+                    {% if request.user|has_permission:'courseApp.evaluate_assignments' %}
+                        <button type="button" id="open-add-material-dialog" data-course-id="{{ course_id }}">Give Grade</button>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No Submission available.</p>
+    {% endif %}
+
+
+  
+{% endblock %}

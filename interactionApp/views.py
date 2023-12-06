@@ -34,6 +34,7 @@ class AddInteractionView(CreateAPIView):
         # You can also return the serialized data in the response if needed
         response_serializer = self.get_serializer(serializer.instance)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+    
 
 class ListInteractionsView(generics.ListAPIView):
     serializer_class = InteractionListSerializer

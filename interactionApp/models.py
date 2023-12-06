@@ -9,6 +9,7 @@ class InteractionHistory(models.Model):
     INTERACTION_TYPE_CHOICES = [
         ('upload', 'Upload'),
         ('read', 'Read'),
+        ('download', 'Download')
         # Add more interaction types as needed
     ]
     interaction_type = models.CharField(max_length=10, choices=INTERACTION_TYPE_CHOICES)

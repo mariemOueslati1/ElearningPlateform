@@ -1,10 +1,11 @@
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 class UserProfile(AbstractUser):
-    role_choicesList = [('Student', 'Student'), ('Tutor', 'Tutor'), ('Administrator', 'Administrator')]
+    role_choicesList = [('Student', 'Student'), ('Tutor', 'Tutor')]
     roleList = models.CharField(max_length=15, choices=role_choicesList, default='Student')
     
     groups = models.ManyToManyField(Group, related_name='user_profiles')
@@ -28,10 +29,9 @@ class UserProfile(AbstractUser):
                 evaluate_assignments_permission,
                 initiate_voice_calls_permission,
             )
-            
-        elif self.roleList == 'Administrator':
-            self.groups.add(admin_group)
+        
             
 
     def __str__(self):
         return self.username
+

@@ -26,7 +26,7 @@
     <p>Base</p>
     {% if user.is_authenticated %}
     <p>{{user}}</p>
-    <p>{{user.username}}</p>
+    <p>{{user.id}}</p>
     <p>User Permissions:</p>
     <ul>
         {% for permission in user.get_all_permissions %}

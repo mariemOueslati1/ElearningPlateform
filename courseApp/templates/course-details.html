@@ -1,0 +1,21 @@
+<!-- course_list.html -->
+{% extends 'base.html' %}
+{% load permissions_tags %}
+
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+
+    <h1>Course Detail</h1>
+    <p>Course ID: {{ course.id }}</p>
+    <p>Title: {{ course.title }}</p>
+    <p>Description: {{ course.description }}</p>
+    
+   
+    <a href="{% url 'material-list' course_id=course.id %}">View Materials</a>
+    <a href="{% url 'assignment-list' course_id=course.id %}">View Assignment</a>
+    <a href="{% url 'get_course_metrics' course_id=course.id %}">View Course metrics</a>
+
+
+   
+{% endblock %}

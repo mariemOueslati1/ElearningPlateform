@@ -12,6 +12,7 @@ from .permissions import CanUploadMaterialPermission , IsCourseTutor
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from django.shortcuts import render, get_object_or_404
+from rest_framework.generics import ListAPIView
 
 # Create your views here.
 
@@ -30,16 +31,19 @@ class AddMaterialView(APIView):
         course = self.get_course(course_id)
         print ("course_id: ", course_id)
 
-        # Ensure that the requesting user is the tutor of the course
-        if request.user != course.tutor:
-            raise PermissionDenied("You do not have permission to add materials to this course.")
-
-        serializer = MaterialSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save(course=course)
-            return Response({'detail': 'Material added successfully.'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = MaterialSerializer(data=request.data)
+            print(" serializer: ", serializer)
+            if serializer.is_valid():
+                serializer.validated_data['course'] = course
+                serializer.save(course=course)
+                return Response({'detail': 'Material added successfully.'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'error': 'Invalid data provided for material creation.'}, status=status.HTTP_400_BAD_REQUEST)
+        except PermissionDenied:
+            return Response({'error': 'You do not have permission to  create a material for this course'}, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UpdateMaterialView(generics.UpdateAPIView):
@@ -112,21 +116,21 @@ class DeleteMaterialView(generics.DestroyAPIView):
         material.delete()
         return Response({'detail': 'Material deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 
-class ListMaterialView(generics.ListAPIView):
-    serializer_class = MaterialSerializer
+class ListMaterialView(ListAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = MaterialSerializer
 
     def get_queryset(self):
         course_id = self.kwargs.get('course_id')
-        course = get_object_or_404(Course, pk=course_id)
-        return Material.objects.filter(course=course)
+        return Material.objects.filter(course_id=course_id)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-
-        # Serialize the queryset and return the response
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+         # Get the course ID from the URL parameters
+        course_id = self.kwargs.get('course_id')
+
+        return render(request, 'materials.html', {'materials': serializer.data, 'user': request.user, 'course_id': course_id})
 
 class MaterialDetailView(generics.RetrieveAPIView):
     serializer_class = MaterialSerializer

@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+{% load permissions_tags %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+
+
+<h1>Analytics</h1>
+
+{% if result %}
+    <p>Result: {{ result }}</p>
+{% elif error %}
+    <p>Error: {{ error }}</p>
+{% endif %}
+
+{% endblock %}
+
+
+
+

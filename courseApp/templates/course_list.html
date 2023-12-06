@@ -5,104 +5,148 @@
 {% block title %}Courses{% endblock %}
 
 {% block content %}
-
-
     <h1>Course List</h1>
     <ul>
         {% for course in courses %}
             <li>
+                <p> course id : {{course.id}}</p>
                 <strong>{{ course.title }}</strong> by {{ course.tutor}}<br>
                 <p>{{ course.description }}</p>
                 Enrollment Capacity: {{ course.enrollment_capacity }}
-                <br>
-                <a href="#" class="delete-course" data-course-id="{{ course.pk }}" data-toggle="modal" data-target="#confirmationModal">Delete</a>
-                <p>{{course.id}}</p>
                 <a href="{% url 'enrollments_for_course' course_id=course.id %}">View Enrollments</a>
+
                 {% if request.user|has_permission:'courseApp.can_enroll' %}
-                <form id="enrollForm" action="{% url 'enrollment_create' course_id=course.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Enroll</button>
-                </form>
-                
-            {% endif %}
+                    <form id="enrollForm" action="{% url 'enrollment_create' course_id=course.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Enroll</button>
+                    </form>
+                {% endif %}
+
+                {% if request.user|has_permission:'courseApp.create_manage_courses' %}
+                    <a href="{% url 'course-update' pk=course.id %}">Update</a>
+                    <button type="button" class="delete-course-btn" data-course-id="{{ course.id }}">Delete Course</button>
+                    
+                    
+                {% endif %}
+                <a href="{% url 'course-detail'  pk=course.id %}">Course Details</a>
             </li>
         {% endfor %}
+       
     </ul>
+    {% if request.user|has_permission:'courseApp.create_manage_courses' %}
+    <button type="button" id="open-add-course-dialog">Add Course</button>
+    <a href="{% url 'tutor-courses' %}">View Your Tutor Dashboard</a>
+    {% endif %}
+    {% if request.user|has_permission:'courseApp.can_enroll' %}
+    <a href="{% url 'student-courses' %}">View Your Student Dashboard</a>
+    {% endif %}
+    <!-- Add Course Dialog -->
+<div id="add-course-dialog" style="display: none;">
+  <form id="add-course-form">
+      {% csrf_token %}
 
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required>
 
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
 
+      <label for="enrollment_capacity">Enrollment Capacity:</label>
+      <input type="number" id="enrollment_capacity" name="enrollment_capacity" required>
 
-{% endblock %}
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete the course?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <a href="#" id="confirmDelete" class="btn btn-danger">Yes, delete</a>
-            </div>
-        </div>
-    </div>
+      <!-- You can set the tutor field value dynamically in the JavaScript code -->
+
+      <button type="submit">Add Course</button>
+  </form>
 </div>
 
-<!-- Add Bootstrap JS and jQuery scripts here -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function() {
-    $('.delete-course').on('click', function() {
-        var courseId = $(this).data('course-id');
-        var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+  
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var deleteButtons = document.getElementsByClassName("delete-course-btn");
 
-        $.ajax({
-            type: 'DELETE',
-            url: '/courses/courses/' + courseId + '/delete/',
-            headers: {'X-CSRFToken': csrfToken},
-            success: function(response) {
-                console.log(response);
-                location.reload();
-            },
-            error: function(error) {
-                console.error(error);
-            }
-        });
-    });
-});
+        Array.from(deleteButtons).forEach(function (button) {
+            button.addEventListener("click", function () {
+                var courseId = button.getAttribute("data-course-id");
 
-</script>
+                if (confirm("Are you sure you want to delete this course?")) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("DELETE", "/courses/courses/" + courseId + "/", true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("form#enrollForm").submit(function (event) {
-            event.preventDefault();
-            var form = $(this);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                          if (xhr.status === 204) {
+                            alert("Course deleted successfully.");
+                            // Optionally, you can redirect to another page or update the UI.
+                        } else if (xhr.status === 403) {
+                            var errorResponse = JSON.parse(xhr.responseText);
+                            alert("Error deleting course: " + errorResponse.error);
+                        } else {
+                            alert("Error deleting course: " + xhr.responseText);
+                        }
+                        }
+                    };
 
-            $.ajax({
-                type: form.attr('method'),
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function (data) {
-                    // Display a dialog or alert
-                    alert(data.message);
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    // Handle errors if needed
-                    console.error(xhr.responseText);
+                    xhr.send();
                 }
             });
         });
     });
-</script>
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    // Open Add Course Dialog
+    document.getElementById("open-add-course-dialog").addEventListener("click", function () {
+        document.getElementById("add-course-dialog").style.display = "block";
+    });
 
-</html>
+    // Submit Form
+    document.getElementById("add-course-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var title = document.getElementById("title").value;
+        var description = document.getElementById("description").value;
+        var enrollmentCapacity = document.getElementById("enrollment_capacity").value;
+
+        
+
+        // Make AJAX request to AddCourseView
+        fetch("{% url 'add_course' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.getElementsByName("csrfmiddlewaretoken")[0].value,
+            },
+            body: JSON.stringify({
+                title: title,
+                description: description,
+                enrollment_capacity: enrollmentCapacity,
+            }),
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Course added successfully.");
+                // Optionally, you can redirect to another page or update the UI.
+                document.getElementById("add-course-dialog").style.display = "none";
+            } else {
+                return response.json().then(data => {
+                    console.log("Error adding course: " + data.error);
+                });
+            }
+        })
+        .catch(error => {
+            console.log("Error adding course: " + error.message);
+        });
+    });
+});
+
+  </script>
+
+    
+{% endblock %}
+
+
+
+

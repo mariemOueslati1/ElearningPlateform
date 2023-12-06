@@ -9,6 +9,7 @@ from .permissions import CanUpsubmitAssignment
 from .serializers import SubmissionSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
+from rest_framework.exceptions import PermissionDenied
 # Create your views here.
 class AddSubmissionView(generics.CreateAPIView):
     queryset = Submission.objects.all()
@@ -24,22 +25,26 @@ class AddSubmissionView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         # Extract assignment_id from the URL
         assignment_id = self.kwargs.get('assignment_id')
-
         # Get the assignment
         assignment = self.get_assignment(assignment_id)
-
+        print("Assignment id : ", assignment_id)
         # Automatically set the student field based on the authenticated user
         request.data['student'] = request.user.id
 
-        # Ensure that the assignment is associated with the correct course or any other necessary checks
-        # You might need to adjust this based on your models and requirements
+        try:
+            serializer = self.get_serializer(data=request.data)
+            print(" serializer: ", serializer)
+            if serializer.is_valid():
+                serializer.save(assignment=assignment)
+                return Response({'detail': 'Submission added successfully.'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'error': 'Invalid data provided for Submission creation.'}, status=status.HTTP_400_BAD_REQUEST)
+        except PermissionDenied:
+            return Response({'error': 'You do not have permission to  create a material for this course'}, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(assignment=assignment)
-            return Response({'detail': 'Submission added successfully.'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class UpdateSubmissionView(generics.UpdateAPIView):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
@@ -125,4 +130,10 @@ class ListSubmissionView(generics.ListAPIView):
 
         # Serialize the queryset and return the response
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        assignment_id = self.kwargs.get('assignment_id')
+        return render(request, 'submission.html', {'submissions': serializer.data, 'user': request.user, 'assignment_id': assignment_id})
+    
+
+    
+
+        
