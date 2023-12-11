@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Test Voice Call</h2>
+    <form action="{% url 'voice_call' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Make Voice Call</button>
+    </form>
+</body>
+</html>

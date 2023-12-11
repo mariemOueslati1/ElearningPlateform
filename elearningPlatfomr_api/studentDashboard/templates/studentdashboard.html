@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+{% load permissions_tags %}
+{% load static %}
+{% block title %}Tutor Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Newsreader&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&family=Newsreader&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:300,400,500,790,900&display=swap");
+
+
+
+    .section_1 {
+        padding-left: 90px;
+        top: 70px;
+        width: 650px;
+        height: 100vh;
+        z-index: -1;
+        margin-right: 900px;
+        width: 100%;
+        left: 90px;
+        width: 90%;
+        height: 80%;
+    }
+
+    .section_3 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #fff;
+    }
+
+    .section_3_portion_1 {
+        position: relative;
+        z-index: 1;
+    }
+
+    #welcome {
+        font-size: 10rem;
+        color: transparent;
+        -webkit-text-stroke: 2px #fff;
+        cursor: pointer;
+        top: 50%;
+        transition: all 0.4s ease;
+        display: inline-block;
+    }
+
+    #welcome:hover {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    p {
+        margin: 20px;
+    }
+
+    .blue_color_div {
+        position: absolute;
+        top: 0;
+        left: 90px;
+        width: 90%;
+        height: 80%;
+        background-color: rgba(23, 83, 117, 0.588);
+        opacity: 0.8;
+    }
+
+    /*parcours*/
+    p {
+        margin: 20px;
+    }
+
+    #parcours-parcours {
+        position: relative;
+        padding: 10%;
+        
+        width: 100vw;
+        margin-top: 15%;
+        height: max-content;
+        margin-bottom: 0;
+    }
+
+    #parcours-parcours .contentBox {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        
+    }
+
+    #parcours-parcours .contentBox .box {
+        overflow: hidden;
+        position: relative;
+        height: 250px;
+        transition: 0.5s;
+    }
+
+    #parcours-parcours .contentBox .box img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        filter: blur(3px);
+        z-index: -1000;
+    }
+    .box p.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: black; /* Adjust text color as needed */
+    margin: 10% 0; /* Add margin for spacing between paragraphs */
+}
+
+    .box .content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        
+
+        transform: translateX(100%);
+        transition: 0.5s;
+    }
+
+    .box .content h4 {
+        font-size: 25px;
+        margin-bottom: 10px;
+        color: #000;
+        text-align: center;
+    }
+
+    .box .content p {
+        padding: 2px;
+        font-size: 12px;
+        color: #000;
+    }
+
+    .box:hover {
+        box-shadow: 0 0 10px #178bf7;
+    }
+
+    .box:hover .content {
+        transform: translateX(0);
+    }
+
+    .btn {
+        width: 150px;
+        height: 50px;
+        border-radius: 50px;
+    }
+
+    .border.btn {
+        display: flex;
+    }
+
+    .border button {
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 30px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: 0;
+        background-color: #07022c;
+        color: #fff;
+        outline: 0;
+    }
+
+    .btn button {
+        width: 150px;
+        height: 43px;
+        border-radius: 50px;
+    }
+
+    .border:hover {
+        background: linear-gradient(#14ffe9, #ffeb3b, #0400ff);
+        box-shadow: 0px 0px 20px -8px #14ffe9, 0px 0px 20px -8px #ffeb3b,
+            0px 0px 20px -8px #006eff;
+        animation: rotate 1.5s linear infinite;
+    }
+
+    .containerBtns {
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+
+    .containerBtns .btn {
+        position: relative;
+        background-color: white;
+    }
+
+    .containerBtns .btn a,
+    .containerBtns .btn form {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.469);
+        border-top: 1px solid rgba(11, 10, 10, 0.529);
+        border-bottom: 1px solid rgba(27, 22, 22, 0.223);
+        border-radius: 30px;
+        color: rgb(9, 9, 59);
+        z-index: 1;
+        font-weight: 400;
+        letter-spacing: 1px;
+        text-decoration: none;
+        overflow: hidden;
+        transition: 0.5s;
+        backdrop-filter: blur(15px);
+    }
+
+    .containerBtns .btn:hover a,
+    .containerBtns .btn:hover form button {
+        letter-spacing: 3px;
+    }
+
+    .containerBtns .btn a::before,
+    .containerBtns .btn form button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to left,
+                rgba(255, 255, 255, 0.15), transparent);
+        transform: skewX(45deg) translateX(0);
+        transition: 0.5s;
+    }
+
+    .containerBtns .btn:hover a::before,
+    .containerBtns .btn:hover form button::before {
+        transform: skewX(45deg) translateX(200%);
+    }
+
+    .containerBtns .btn::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -5px;
+        width: 30px;
+        height: 10px;
+        background: #f00;
+        border-radius: 10px;
+        transition: 0.5s;
+        transition-delay: 0s;
+    }
+
+    .containerBtns .btn:hover::before {
+        bottom: 0;
+        height: 50%;
+        width: 80%;
+        border-radius: 30px;
+        transition-delay: 0.5s;
+    }
+
+
+    .containerBtns .btn:before {
+        background: #158dae;
+        box-shadow: 0 0 5px #1dc6f5,
+            0 0 15px #2bd2ff,
+            0 0 30px #2bd2ff,
+            0 0 60px #2bd2ff;
+    }
+
+    .debut {
+       
+        width: 100vw !important;
+        height: 85vh !important;
+        position: relative;
+    }
+
+    .wrapper-container {
+        
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+
+<section id="parcours-parcours">
+    <h1>Student Dashboard - Course Enrolled</h1>
+
+    <div class="contentBox">
+        {% if enrollments %}
+        {% for enrollment in enrollments %}
+       
+        <div class="box">
+            <img src="{% static 'acceuil/images/cours.jpg' %}" alt="">
+            
+            <p class="overlay">{{ enrollment.course }} <br>
+            {{ enrollment.course_title }} <br> {{ enrollment.course_description }}
+            Enrolled on {{ enrollment.enrollment_date }}
+            </p>
+           
+            
+            <div class="content">
+                <div class="wrapper-container">
+                    <div class="containerBtns">
+                        <div class="btn"><a href="{% url 'course-detail' pk=enrollment.course %}">Course Details</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% else %}
+    <p>You are not enrolled in any courses.</p>
+    {% endif %}
+    </div>
+
+</section>
+
+
+
+{% endblock %}

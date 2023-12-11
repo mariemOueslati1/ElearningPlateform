@@ -1,0 +1,837 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,790,900&display=swap" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Add your head content here -->
+  <title>Login</title>
+
+<body>
+  
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900");
+
+    body {
+      font-family: "Poppins", sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #c4c3ca;
+      background-color: #1f2029;
+      overflow-x: hidden;
+    }
+
+    a {
+      cursor: pointer;
+      transition: all 200ms linear;
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    .link {
+      color: #c4c3ca;
+    }
+
+    .link:hover {
+      color: #ffeba7;
+    }
+
+    p {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    h4 {
+      font-weight: 600;
+    }
+
+    h6 span {
+      padding: 0 20px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+
+
+    .full-height {
+      min-height: 100vh;
+    }
+
+    [type="checkbox"]:checked,
+    [type="checkbox"]:not(:checked) {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .checkbox:checked+label,
+    .checkbox:not(:checked)+label {
+      position: relative;
+      display: block;
+      text-align: center;
+      width: 60px;
+      height: 16px;
+      border-radius: 8px;
+      padding: 0;
+      margin: 10px auto;
+      cursor: pointer;
+      background-color: #ffeba7;
+    }
+
+    .checkbox:checked+label:before,
+    .checkbox:not(:checked)+label:before {
+      position: absolute;
+      display: block;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: #ffeba7;
+      background-color: #171f38;
+      font-family: "unicons";
+      content: "\eb4f";
+      z-index: 20;
+      top: -10px;
+      left: -10px;
+      line-height: 36px;
+      text-align: center;
+      font-size: 24px;
+      transition: all 0.5s ease;
+    }
+
+    .checkbox:checked+label:before {
+      transform: translateX(44px) rotate(-270deg);
+    }
+
+    .card-3d-wrap {
+      position: relative;
+      width: 440px;
+      max-width: 100%;
+      height: 400px;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      perspective: 800px;
+      margin-top: 60px;
+    }
+
+    .card-3d-wrapper {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: all 600ms ease-out;
+    }
+
+    .card-front,
+    .card-back {
+      width: 100%;
+      height: 100%;
+      background-color: #2a2b38;
+      background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg");
+      background-position: bottom center;
+      background-repeat: no-repeat;
+      background-size: 300%;
+      position: absolute;
+      border-radius: 6px;
+      left: 0;
+      top: 0;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      -o-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    .checkbox:checked~.card-3d-wrap .card-3d-wrapper {
+      transform: rotateY(180deg);
+    }
+
+    .center-wrap {
+      position: absolute;
+      width: 100%;
+      padding: 0 35px;
+      top: 50%;
+      left: 0;
+      transform: translate3d(0, -50%, 35px) perspective(100px);
+      z-index: 20;
+      display: block;
+    }
+
+    .form-group {
+      position: relative;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+
+    .form-style {
+      padding: 13px 20px;
+      padding-left: 55px;
+      height: 48px;
+      width: 100%;
+      font-weight: 500;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+      letter-spacing: 0.5px;
+      outline: none;
+      color: #c4c3ca;
+      background-color: #1f2029;
+      border: none;
+      -webkit-transition: all 200ms linear;
+      transition: all 200ms linear;
+      box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+    }
+
+
+    .btn {
+      border-radius: 4px;
+      height: 44px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      -webkit-transition: all 200ms linear;
+      transition: all 200ms linear;
+      padding: 0 30px;
+      letter-spacing: 1px;
+      display: -webkit-inline-flex;
+      display: -ms-inline-flexbox;
+      display: inline-flex;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      -ms-align-items: center;
+      align-items: center;
+      -webkit-justify-content: center;
+      -moz-justify-content: center;
+      -ms-justify-content: center;
+      justify-content: center;
+      -ms-flex-pack: center;
+      text-align: center;
+      border: none;
+      background-color: #ffeba7;
+      color: #102770;
+      box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
+    }
+
+    .btn:active,
+    .btn:focus {
+      background-color: #102770;
+      color: #ffeba7;
+      box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+    }
+
+    .btn:hover {
+      background-color: #102770;
+      color: #ffeba7;
+      box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+    }
+
+
+
+    :root {
+      --clr-dark-900: #102770;
+      --clr-dark-800: #e4dddd;
+      --clr-dark-700: #f1ebe7;
+      --clr-primary: #102770;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      /* ajustez la hauteur en fonction de votre contenu */
+    }
+
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    body {
+      min-height: 100dvh;
+      background-color: #1b263b;
+      color: #c4c3ca;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+
+    header {
+      height: 300px;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    footer {
+      padding: 1rem;
+    }
+
+    footer input {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 1.5rem;
+      color: rgb(8, 8, 8);
+      border-radius: 0.5vmin;
+      margin-top: 0.5rem;
+    }
+
+    footer input {
+      background-color: var(--clr-dark-700);
+    }
+
+    footer input::placeholder {
+      color: #d6cfcf;
+    }
+
+
+    .image-container {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: white;
+      border: 5px solid #986844;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .image-container .image {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      bottom: -12%;
+      animation: avatar 5s ease-in-out infinite;
+      transform-origin: bottom;
+      transition: 500ms;
+    }
+
+    @keyframes avatar {
+
+      0%,
+      50%,
+      100% {
+        transform: rotate(0deg) translatey(0px) scale(1.05);
+      }
+
+      25% {
+        transform: rotate(5deg) translatey(5px) scale(1);
+      }
+
+      75% {
+        transform: rotate(-5deg) translatey(5px) scale(1);
+      }
+    }
+
+    .image-container .image:active {
+      translate: 0 50px;
+    }
+
+    .image-container img {
+      display: inline-block;
+      position: absolute;
+      transition: 100ms;
+    }
+
+    .image-container img.face {
+      width: 40%;
+      left: 30%;
+      bottom: 40%;
+      opacity: 0;
+    }
+
+    .image-container .face-1 {
+      opacity: 1;
+      animation: eye-open 2s ease-in-out infinite;
+    }
+
+    .image-container .face-2 {
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      89%,
+      100% {
+        opacity: 0;
+      }
+
+      90%,
+      99% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes eye-open {
+
+      0%,
+      89%,
+      100% {
+        opacity: 1;
+      }
+
+      90%,
+      99% {
+        opacity: 0;
+      }
+    }
+
+    .image-container:hover img.face {
+      opacity: 0 !important;
+      animation: none;
+    }
+
+    .image-container:hover img.face-3 {
+      opacity: 1 !important;
+    }
+
+    .curtain {
+      position: absolute;
+      top: -5px;
+      height: 0;
+      width: 100%;
+      background-color: #1f2029;
+      border-bottom: 15px solid var(--clr-primary);
+      transition: 0.5s;
+    }
+
+    section:has([type="password"]:focus) .curtain {
+      height: 90%;
+    }
+
+    section:has([type="password"]:focus) .image {
+      animation-play-state: paused;
+    }
+  </style>
+  <section>
+
+    <header>
+
+
+      <div class="image-container">
+        <div class="image">
+          <img class="avatar" src="{% static 'elearningApp/images/00.png' %}" alt="Avatar">
+          <img class="face face-1" src="{% static 'elearningApp/images/11.png' %}" alt="Face 1">
+          <img class="face face-2" src="{% static 'elearningApp/images/22.png' %}" alt="Face 2">
+          <img class="face face-3" src="{% static 'elearningApp/images/33.png' %}" alt="Face 3">
+        </div>
+        <div class="curtain" id="curtain"></div>
+      </div>
+
+    </header>
+
+
+    <footer>
+      <div class=" section bg-primary">
+        <div class="container">
+          <div class="row full-height justify-content-center ">
+            <div class="col-12 text-center align-self-center py-5">
+              <div class="section text-center  bg-warning">
+                <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                <label for="reg-log"></label>
+                <div class="card-3d-wrap ">
+                  <div class="card-3d-wrapper">
+
+                    <div class="card-front">
+                      <div class="center-wrap">
+                        <div class="section text-center">
+
+                          <h4 class="mb-4 pb-3">Login</h4>
+                          <form method="post" action="{% url 'login' %}" id="loginForm" >
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                              <input type="text" name="username" id="username" class="form-style" required placeholder="Username">
+                              <i class="input-icon uil uil-user"></i>
+                            </div>
+                          
+                            <div class="form-group mt-2">
+                              
+                              <input type="password" name="password" id="password" class="form-style" required placeholder="Password">
+                              
+                            </div>
+                            <input type="submit" onclick="submitForm()" value="Login">
+                          </form>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <div class="card-back">
+                      <div class="center-wrap">
+                        <div class="section text-center">
+                          <h4 class="mb-4 pb-3">Register</h4>
+                          <form method="post" action="{% url 'register' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <input type="text" name="username" id="username" class="form-style" required
+                                placeholder="Username">
+                              {% if form.errors.username %}
+                              <div class="error-message">
+                                {{ form.errors.username }}
+                              </div>
+                              {% endif %}
+                            </div>
+
+                            <div class="form-group">
+
+                              <input type="email" name="email" id="email" class="form-style" required
+                                placeholder="email">
+                              {% if form.errors.email %}
+                              <div class="error-message">
+                                {{ form.errors.email }}
+                              </div>
+                              {% endif %}
+                            </div>
+
+                            <div class="form-group">
+
+                              <input type="password" name="password1" id="password1" class="form-style" required>
+                              {% if form.errors.password1 %}
+                              <div class="error-message">
+                                {{ form.errors.password1 }}
+                              </div>
+                              {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                              <input type="password" name="password2" id="password2" class="form-style" required>
+                              {% if form.errors.password2 %}
+                              <div class="error-message">
+                                {{ form.errors.password2 }}
+                              </div>
+                              {% endif %}
+                            </div>
+
+                            <div class="form-group">
+
+                              {{ form.roleList }}
+                              {% if form.errors.roleList %}
+                              <div class="error-message">
+                                {{ form.errors.roleList }}
+                              </div>
+                              {% endif %}
+                            </div>
+
+
+                            <input type="submit" value="Register">
+                          </form>
+
+                        </div>
+
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+
+
+  </section>
+
+</body>
+
+
+<script>
+  var colour = "random"; // "random" can be replaced with any valid colour ie: "red"...
+  var sparkles = 100; // increase of decrease for number of sparkles falling
+
+  var x = ox = 400;
+  var y = oy = 300;
+  var swide = 800;
+  var shigh = 600;
+  var sleft = sdown = 0;
+  var tiny = new Array();
+  var star = new Array();
+  var starv = new Array();
+  var starx = new Array();
+  var stary = new Array();
+  var tinyx = new Array();
+  var tinyy = new Array();
+  var tinyv = new Array();
+  colours = new Array('#ff0000', '#00ff00', '#ffffff', '#ff00ff', '#ffa500', '#ffff00', '#00ff00', '#ffffff', 'ff00ff');
+  n = 10;
+  y = 0;
+  x = 0;
+  n6 = document.getElementById && !document.all;
+  ns = document.layers;
+  ie = document.all;
+  d = ns || ie ? 'document.' : 'document.getElementById("';
+  a = ns || n6 ? '' : 'all.';
+  n6r = n6 ? '")' : '';
+  s = ns ? '' : '.style';
+  if (ns) {
+    for (i = 0; i < n; i++) document.write('<layer name="dots' + i + '" top=0 left=0 width=' + i / 2 + ' height=' + i / 2 + ' bgcolor=#ff0000></layer>');
+  }
+  if (ie) document.write('<div id="con" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+  if (ie || n6) {
+    for (i = 0; i < n; i++) document.write('<div id="dots' + i + '" style="position:absolute;top:0px;left:0px;width:' + i / 2 + 'px;height:' + i / 2 + 'px;background:#ff0000;font-size:' + i / 2 + '"></div>');
+  }
+  if (ie) document.write('</div></div>');
+  ns || n6 ? window.captureEvents(Event.MOUSEMOVE) : 0;
+  function Mouse(evnt) {
+    y = ns || n6 ? evnt.pageY + 4 - window.pageYOffset : event.y + 4;
+    x = ns || n6 ? evnt.pageX + 1 : event.x + 1;
+  }
+  ns ? window.onMouseMove = Mouse : document.onmousemove = Mouse;
+  function animate() {
+    o = ns || n6 ? window.pageYOffset : 0;
+    if (ie) con.style.top = document.body.scrollTop + 'px';
+    for (i = 0; i < n; i++) {
+      var temp1 = eval(d + a + "dots" + i + n6r + s);
+      randcolours = colours[Math.floor(Math.random() * colours.length)];
+      ns ? temp1.bgColor = randcolours : temp1.background = randcolours;
+      if (i < n - 1) {
+        var temp2 = eval(d + a + "dots" + (i + 1) + n6r + s);
+        temp1.top = parseInt(temp2.top) + 'px';
+        temp1.left = parseInt(temp2.left) + 'px';
+      } else {
+        temp1.top = y + o + 'px';
+        temp1.left = x + 'px';
+      }
+    }
+    setTimeout("animate()", 10);
+  }
+  animate();
+  window.onload = function () {
+    if (document.getElementById) {
+      var i, rats, rlef, rdow;
+      for (var i = 0; i < sparkles; i++) {
+        var rats = createDiv(3, 3);
+        rats.style.visibility = "hidden";
+        rats.style.zIndex = "999";
+        document.body.appendChild(tiny[i] = rats);
+        starv[i] = 0;
+        tinyv[i] = 0;
+        var rats = createDiv(5, 5);
+        rats.style.backgroundColor = "transparent";
+        rats.style.visibility = "hidden";
+        rats.style.zIndex = "999";
+        var rlef = createDiv(1, 5);
+        var rdow = createDiv(5, 1);
+        rats.appendChild(rlef);
+        rats.appendChild(rdow);
+        rlef.style.top = "2px";
+        rlef.style.left = "0px";
+        rdow.style.top = "0px";
+        rdow.style.left = "2px";
+        document.body.appendChild(star[i] = rats);
+      }
+      set_width();
+      sparkle();
+    }
+  };
+  function sparkle() {
+    var c;
+    if (Math.abs(x - ox) > 1 || Math.abs(y - oy) > 1) {
+      ox = x;
+      oy = y;
+      for (c = 0; c < sparkles; c++) if (!starv[c]) {
+        star[c].style.left = (starx[c] = x) + "px";
+        star[c].style.top = (stary[c] = y + 1) + "px";
+        star[c].style.clip = "rect(0px, 5px, 5px, 0px)";
+        star[c].childNodes[0].style.backgroundColor = star[c].childNodes[1].style.backgroundColor = colour == "random" ? newColour() : colour;
+        star[c].style.visibility = "visible";
+        starv[c] = 50;
+        break;
+      }
+    }
+    for (c = 0; c < sparkles; c++) {
+      if (starv[c]) update_star(c);
+      if (tinyv[c]) update_tiny(c);
+    }
+    setTimeout("sparkle()", 40);
+  }
+  function update_star(i) {
+    if (--starv[i] == 25) star[i].style.clip = "rect(1px, 4px, 4px, 1px)";
+    if (starv[i]) {
+      stary[i] += 1 + Math.random() * 3;
+      starx[i] += (i % 5 - 2) / 5;
+      if (stary[i] < shigh + sdown) {
+        star[i].style.top = stary[i] + "px";
+        star[i].style.left = starx[i] + "px";
+      } else {
+        star[i].style.visibility = "hidden";
+        starv[i] = 0;
+        return;
+      }
+    } else {
+      tinyv[i] = 50;
+      tiny[i].style.top = (tinyy[i] = stary[i]) + "px";
+      tiny[i].style.left = (tinyx[i] = starx[i]) + "px";
+      tiny[i].style.width = "2px";
+      tiny[i].style.height = "2px";
+      tiny[i].style.backgroundColor = star[i].childNodes[0].style.backgroundColor;
+      star[i].style.visibility = "hidden";
+      tiny[i].style.visibility = "visible";
+    }
+  }
+  function update_tiny(i) {
+    if (--tinyv[i] == 25) {
+      tiny[i].style.width = "1px";
+      tiny[i].style.height = "1px";
+    }
+    if (tinyv[i]) {
+      tinyy[i] += 1 + Math.random() * 3;
+      tinyx[i] += (i % 5 - 2) / 5;
+      if (tinyy[i] < shigh + sdown) {
+        tiny[i].style.top = tinyy[i] + "px";
+        tiny[i].style.left = tinyx[i] + "px";
+      } else {
+        tiny[i].style.visibility = "hidden";
+        tinyv[i] = 0;
+        return;
+      }
+    } else tiny[i].style.visibility = "hidden";
+  }
+  document.onmousemove = mouse;
+  function mouse(e) {
+    if (e) {
+      y = e.pageY;
+      x = e.pageX;
+    } else {
+      set_scroll();
+      y = event.y + sdown;
+      x = event.x + sleft;
+    }
+  }
+  window.onscroll = set_scroll;
+  function set_scroll() {
+    if (typeof self.pageYOffset == 'number') {
+      sdown = self.pageYOffset;
+      sleft = self.pageXOffset;
+    } else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+      sdown = document.body.scrollTop;
+      sleft = document.body.scrollLeft;
+    } else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+      sleft = document.documentElement.scrollLeft;
+      sdown = document.documentElement.scrollTop;
+    } else {
+      sdown = 0;
+      sleft = 0;
+    }
+  }
+  window.onresize = set_width;
+  function set_width() {
+    var sw_min = 999999;
+    var sh_min = 999999;
+    if (document.documentElement && document.documentElement.clientWidth) {
+      if (document.documentElement.clientWidth > 0) sw_min = document.documentElement.clientWidth;
+      if (document.documentElement.clientHeight > 0) sh_min = document.documentElement.clientHeight;
+    }
+    if (typeof self.innerWidth == 'number' && self.innerWidth) {
+      if (self.innerWidth > 0 && self.innerWidth < sw_min) sw_min = self.innerWidth;
+      if (self.innerHeight > 0 && self.innerHeight < sh_min) sh_min = self.innerHeight;
+    }
+    if (document.body.clientWidth) {
+      if (document.body.clientWidth > 0 && document.body.clientWidth < sw_min) sw_min = document.body.clientWidth;
+      if (document.body.clientHeight > 0 && document.body.clientHeight < sh_min) sh_min = document.body.clientHeight;
+    }
+    if (sw_min == 999999 || sh_min == 999999) {
+      sw_min = 800;
+      sh_min = 600;
+    }
+    swide = sw_min;
+    shigh = sh_min;
+  }
+  function createDiv(height, width) {
+    var div = document.createElement("div");
+    div.style.position = "absolute";
+    div.style.height = height + "px";
+    div.style.width = width + "px";
+    div.style.overflow = "hidden";
+    return div;
+  }
+  function newColour() {
+    var c = new Array();
+    c[0] = 255;
+    c[1] = Math.floor(Math.random() * 256);
+    c[2] = Math.floor(Math.random() * (256 - c[1] / 2));
+    c.sort(function () {
+      return 0.5 - Math.random();
+    });
+    return "rgb(" + c[0] + ", " + c[1] + ", " + c[2] + ")";
+  }
+
+</script>
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+
+
+<script>
+  function submitForm() {
+    const form = document.getElementsByTagName('form')[0];
+    console.log('form ', form);
+    const formData = new FormData(form);
+
+    fetch("{% url 'login' %}", {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Assuming your server responds with a token field in the JSON data
+        const receivedToken = data.token;
+        console.log(receivedToken);
+
+        // Store the token securely (you might want to encrypt it)
+        localStorage.setItem('authToken', receivedToken);
+
+        // Redirect or perform other actions as needed
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+
+</body>
+</html>

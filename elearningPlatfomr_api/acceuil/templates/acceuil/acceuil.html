@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load permissions_tags %}
+
+{% block title %}Acceuil{% endblock %}
+
+{% block content %}
+{% if not user.is_authenticated %}
+    <div class="border btn">
+        <a href="{% url 'login' %}"><button>Commencer</button></a>
+    </div>
+{% endif %}
+<ul class="tags-cloud">
+    <li class="tag"><span class="wrap">e-learning</span></li>
+    <li class="tag"><span class="wrap">apprentissage_en_ligne</span></li>
+    <li class="tag"><span class="wrap">aprendizaje_en_línea</span></li>
+    <li class="tag"><span class="wrap">التعلم الإلكتروني</span></li>
+    <li class="tag"><span class="wrap"> apprendimento_online</span></li>
+    <li class="tag"><span class="wrap">online_leren</span></li>
+    <li class="tag"><span class="wrap">电子学习</span></li>
+    <li class="tag"><span class="wrap">전자 학습 </span></li>
+    <li class="tag"><span class="wrap">ई-लर्निंग</span></li>
+    <li class="tag"><span class="wrap"> электронное обучение</span></li>
+    <li class="tag"><span class="wrap">E-Learning</span></li>
+    <li class="tag"><span class="wrap">aprendizagem online</span></li>
+</ul>
+<div class="container">
+        <div class="icon-image">
+            <div class="icon"> <img src="{% static 'acceuil/images/img.png' %}" /> </div>
+    
+            <div class="hover-image one">
+                <div class="img">
+                    <img src="{% static 'acceuil/images/img.png' %}" alt="" />
+                </div>
+                <div class="content">
+                    <div class="details">
+                        <div class="job">
+                            <a id="sign-btn" href="#"><button class="button" href="#">Commencer</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+        <div class="icon-image">
+            <div class="icon"> <img src="{% static 'acceuil/images/img1 (1).jpg' %}" /></div>
+            <div class="hover-image one">
+                <div class="img">
+                    <img src="{% static 'acceuil/images/img1 (1).jpg' %}" alt="" />
+                </div>
+                <div class="content">
+                    <div class="details">
+                        <div class="job">
+                            <a id="sign-btn" href="#"><button class="button" href="#">Commencer</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="icon-image">
+            <div class="icon"> <img src="{% static 'acceuil/images/img1 (3).jpg' %}" alt="" /></div>
+            <div class="hover-image one">
+                <div class="img">
+                    <img src="{% static 'acceuil/images/img1 (3).jpg' %}" alt="" />
+                </div>
+                <div class="content">
+                    <div class="details">
+                        <div class="job">
+                            <a id="sign-btn" href="#"><button class="button" href="#">Commencer</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="icon-image">
+            <div class="icon"> <img src="{% static 'acceuil/images/img1 (2).png' %}" alt="" /></div>
+            <div class="hover-image one">
+                <div class="img">
+                    <img src="{% static 'acceuil/images/img1 (2).png' %}" alt="" />
+                </div>
+                <div class="content">
+                    <div class="details">
+                        <div class="job">
+                            <a id="sign-btn" href="#"><button class="button" href="#">Commencer</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="icon-image">
+            <div class="icon"> <img src="{% static 'acceuil/images/R.png' %}" alt="" /></div>
+            <div class="hover-image one">
+                <div class="img">
+                    <img src="{% static 'acceuil/images/R.png' %}" alt="" />
+                </div>
+                <div class="content">
+                    <div class="details">
+                        <div class="job">
+                            <a id="sign-btn" href="#"><button class="button" href="#">Commencer</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="icon-image last">
+            <div class="icon">
+                <img src="{% static 'acceuil/images/C.png' %}" alt="" />
+            </div>
+            <div class="hover-image one">
+                <div class="img">
+                    <img src="{% static 'acceuil/images/C.png' %}" alt="" />
+                </div>
+            </div>
+        </div>
+</div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Afficher la boîte de dialogue de connexion lorsque le bouton "Log In" est cliqué
+            $("#login-btn").click(function () {
+                $(".login-popup").fadeIn();
+                $(".signup-popup").fadeOut(); // cacher la popup d'inscription si elle est ouverte
+            });
+
+            // Afficher la boîte de dialogue d'inscription lorsque le bouton "Sign Up" est cliqué
+            $("#signup-btn").click(function () {
+                $(".signup-popup").fadeIn();
+                $(".login-popup").fadeOut(); // cacher la popup de connexion si elle est ouverte
+            });
+
+            // Fermer la boîte de dialogue de connexion ou d'inscription lorsque la croix est cliquée
+            $(".close").click(function () {
+                $(".login-popup, .signup-popup").fadeOut();
+            });
+        });
+    </script>
+    <script>
+
+        class FibonacciSphere {
+            // la classe "FibonacciSphere" permet de créer une sphère de points équidistants
+            #points; //Les points sont stockés dans cette  propriété privée
+
+            get points() {
+                //une méthode "get" appelée "points" qui renvoie l'attribut privé "#points"
+                return this.#points;
+            }
+
+            constructor(N) {
+                this.#points = [];
+
+                const goldenAngle = Math.PI * (3 - Math.sqrt(5)); //une constante "goldenAngle" qui est utilisée pour calculer les positions des points sur la sphère
+                for (let i = 0; i < N; i++) {
+                    const y = 1 - (i / (N - 1)) * 2; //la position de la coordonnée "y" sur la sphère
+                    const radius = Math.sqrt(1 - y ** 2); //le rayon de la sphère à partir de la coordonnée "y
+                    const a = goldenAngle * i; //les positions de coordonnées "x" et "z" sur la sphère
+                    const x = Math.cos(a) * radius;
+                    const z = Math.sin(a) * radius;
+
+                    this.#points.push([x, y, z]); //les coordonnées sont ajoutées au tableau "#points" à chaque itération de la boucle.
+                }
+            }
+        }
+
+        class TagsCloud {
+            //eprésente un nuage de tags sur une sphère qui tourne en réponse aux événements de souris.
+            #root; //une propriété privée qui contient la racine du nuage de tags (élément DOM)
+            #size; //une propriété privée qui contient la taille de la racine
+            #sphere; //une instance de la classe FibonacciSphere qui contient les coordonnées des points dans la sphère tridimensionnelle
+            #tags; // l'axe de rotation du nuage de tags
+            #rotationAxis; // l'angle de rotation actuel du nuage de tags,
+            #rotationAngle; //  l'angle actuel de rotation pour le nuage de tags.
+
+            #rotationSpeed; //la vitesse de rotation pour le nuage de tags.
+            #frameRequestId; //contient l'ID du prochain frame d'animation.
+
+            constructor(root) {
+                this.#root = root;
+                this.#size = this.#root.offsetWidth;
+                this.#tags = root.querySelectorAll(".tag");
+                this.#sphere = new FibonacciSphere(this.#tags.length);
+                this.#rotationAxis = [1, 0, 0];
+                this.#rotationAngle = 0;
+                this.#rotationSpeed = 0;
+
+                this.#updatePositions(); //une méthode privée qui met à jour la position de chaque tag en fonction des vecteurs dans #sphere
+                this.#initEventListeners(); //suit les mouvements de souris et ajuste la propriété #rotationSpeed en fonction de la distance parcourue par la souris.
+                this.#root.classList.add("-loaded"); //the class "-loaded"
+            }
+
+            #initEventListeners() {
+                window.addEventListener("resize", this.#updatePositions.bind(this));
+                document.addEventListener("mousemove", this.#onMouseMove.bind(this));
+            }
+
+            #updatePositions() {
+                const sin = Math.sin(this.#rotationAngle);
+                const cos = Math.cos(this.#rotationAngle);
+                const ux = this.#rotationAxis[0];
+                const uy = this.#rotationAxis[1];
+                const uz = this.#rotationAxis[2];
+
+                const rotationMatrix = [
+                    [
+                        cos + ux ** 2 * (1 - cos),
+                        ux * uy * (1 - cos) - uz * sin,
+                        ux * uz * (1 - cos) + uy * sin,
+                    ],
+                    [
+                        uy * ux * (1 - cos) + uz * sin,
+                        cos + uy ** 2 * (1 - cos),
+                        uy * uz * (1 - cos) - ux * sin,
+                    ],
+                    [
+                        uz * ux * (1 - cos) - uy * sin,
+                        uz * uy * (1 - cos) + ux * sin,
+                        cos + uz ** 2 * (1 - cos),
+                    ],
+                ];
+
+                const N = this.#tags.length;
+
+                for (let i = 0; i < N; i++) {
+                    const x = this.#sphere.points[i][0];
+                    const y = this.#sphere.points[i][1];
+                    const z = this.#sphere.points[i][2];
+
+                    const transformedX =
+                        rotationMatrix[0][0] * x +
+                        rotationMatrix[0][1] * y +
+                        rotationMatrix[0][2] * z;
+                    const transformedY =
+                        rotationMatrix[1][0] * x +
+                        rotationMatrix[1][1] * y +
+                        rotationMatrix[1][2] * z;
+                    const transformedZ =
+                        rotationMatrix[2][0] * x +
+                        rotationMatrix[2][1] * y +
+                        rotationMatrix[2][2] * z;
+
+                    const translateX = (this.#size * transformedX) / 2;
+                    const translateY = (this.#size * transformedY) / 2;
+                    const scale = (transformedZ + 2) / 3;
+                    const transform = `translateX(${translateX}px) translateY(${translateY}px) scale(${scale})`;
+                    const opacity = (transformedZ + 1.5) / 2.5;
+
+                    this.#tags[i].style.transform = transform;
+                    this.#tags[i].style.opacity = opacity;
+                }
+            }
+
+            #onMouseMove(e) {
+                const rootRect = this.#root.getBoundingClientRect();
+                const deltaX = e.clientX - (rootRect.left + this.#root.offsetWidth / 2);
+                const deltaY = e.clientY - (rootRect.top + this.#root.offsetHeight / 2);
+                const a = Math.atan2(deltaX, deltaY) - Math.PI / 2;
+                const axis = [Math.sin(a), Math.cos(a), 0];
+                const delta = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+                const speed = delta / Math.max(window.innerHeight, window.innerWidth) / 10;
+
+                this.#rotationAxis = axis;
+                this.#rotationSpeed = speed;
+            }
+
+            #update() {
+                this.#rotationAngle += this.#rotationSpeed;
+
+                this.#updatePositions();
+            }
+
+            start() {
+                this.#update();
+
+                this.#frameRequestId = requestAnimationFrame(this.start.bind(this));
+            }
+
+            stop() {
+                cancelAnimationFrame(this.#frameRequestId);
+            }
+        }
+
+        function main() {
+            {
+                const root = document.querySelector(".tags-cloud");
+                const cloud = new TagsCloud(root);
+
+                cloud.start();
+            }
+
+            {
+                const cursor = document.getElementById("cursor");
+                const isActivated = false;
+
+                document.addEventListener("mousemove", (e) => {
+                    if (!isActivated) {
+                        cursor.classList.add("-activated");
+                    }
+
+                    cursor.style.transform = `translateX(${e.clientX}px) translateY(${e.clientY}px)`;
+                });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            main();
+        });
+        const indicator = document.querySelector(".nav-indicator");
+        const items = document.querySelectorAll(".nav-item");
+
+        function handleIndicator(el) {
+            items.forEach((item) => {
+                item.classList.remove("is-active");
+                item.removeAttribute("style");
+            });
+
+            indicator.style.width = `${el.offsetWidth}px`;
+            indicator.style.left = `${el.offsetLeft}px`;
+            indicator.style.backgroundColor = el.getAttribute("active-color");
+
+            el.classList.add("is-active");
+            el.style.color = el.getAttribute("active-color");
+        }
+
+        items.forEach((item, index) => {
+            item.addEventListener("click", (e) => {
+                handleIndicator(e.target);
+            });
+            item.classList.contains("is-active") && handleIndicator(item);
+        });
+        $(document).ready(function () {
+            $("#flipbook").turn({
+                width: 800,
+                height: 500,
+                autoCenter: true,
+                duration: 1000,
+                acceleration: true,
+                gradients: true,
+                elevation: 50,
+                when: {
+                    turned: function (event, page, view) {
+                        console.log("La page", page, "a été tournée");
+                    },
+                },
+            });
+
+            $(".page").on("mouseover", function () {
+                $(this).addClass("flip");
+            });
+
+            $(".page").on("mouseout", function () {
+                $(this).removeClass("flip");
+            });
+        });
+
+    </script>
+
+   
+{% endblock %}
